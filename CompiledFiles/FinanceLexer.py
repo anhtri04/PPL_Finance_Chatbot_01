@@ -1,4 +1,4 @@
-# Generated from D:\Studying_Materials\Dai_Hoc_Quoc_Te\Studying\Year_03_2425\Semester_02_2425\Principles_Of_Programming_Languages\Projects\Draft_08\Finance.g4 by ANTLR 4.9.2
+# Generated from C:\\Users\\USER\\PPL_Finance_Chatbot_01\\Finance.g4 by ANTLR 4.9.2
 from antlr4 import *
 from io import StringIO
 import sys

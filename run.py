@@ -4,7 +4,7 @@ import subprocess
 
 # Define paths
 DIR = os.path.dirname(__file__)
-ANTLR_JAR = 'C:\\Application\\antlr4.9.2\\antlr4-4.9.2-complete.jar'  # Update to your ANTLR JAR path
+ANTLR_JAR = 'C:\\antlr\\antlr4-4.9.2-complete.jar'  # Update to your ANTLR JAR path
 CPL_Dest = os.path.join(DIR, 'CompiledFiles')
 SRC = os.path.join(DIR, 'Finance.g4')
 
