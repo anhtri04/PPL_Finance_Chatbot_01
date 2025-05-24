@@ -5,7 +5,7 @@ def format_vnd(amount):
     amount_str = str(int(amount))  # Ensure integer for formatting
     length = len(amount_str)
     if length <= 3:
-        return amount_str
+        return amount_str # 1.0
     
     result = []
     for i in range(length - 1, -1, -1):

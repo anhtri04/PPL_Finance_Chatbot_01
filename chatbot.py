@@ -140,7 +140,7 @@ def run():
                                 'original_amount': orig_amount,
                                 'currency': currency
                             }), date))
-                        conn.commit()
+                        conn.commit()   #merge 1.0
                         print(f"Chatbot: Categories added. Unallocated money: {format_vnd(get_unallocated(cursor, user_id))} VND")
                     else:
                         print("Chatbot: Not enough unallocated money to add these categories.")

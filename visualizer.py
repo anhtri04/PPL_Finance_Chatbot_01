@@ -20,7 +20,7 @@ def generate_spending_graph(spending):
                     "#388E3C", "#1976D2", "#F57C00", "#D32F2F", "#7B1FA2"
                 ],
                 "borderWidth": 1
-            }]
+            }] # 1.0
         },
         "options": {
             "scales": {

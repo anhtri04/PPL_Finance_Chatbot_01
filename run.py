@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-# Define paths
+# Define paths 1.0
 DIR = os.path.dirname(__file__)
 ANTLR_JAR = 'C:\\antlr\\antlr4-4.9.2-complete.jar'  # Update to your ANTLR JAR path
 CPL_Dest = os.path.join(DIR, 'CompiledFiles')

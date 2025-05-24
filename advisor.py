@@ -6,7 +6,7 @@ class Advisor:
         # Load small English model for local NLP
         self.nlp = spacy.load("en_core_web_sm")
     
-    def generate_advice(self, data):
+    def generate_advice(self, data): # merge 1.0
         """Analyze spending data and generate financial advice."""
         if not data['actions']:
             return "No financial activity to analyze yet. Try adding a salary or spending some money!"

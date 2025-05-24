@@ -34,7 +34,7 @@ class IntentListener(FinanceListener):
         currency = ctx.CURRENCY().getText()
         item = ' '.join([id.getText() for id in ctx.item().ID()])
         category = ctx.category().getText() if ctx.category() else self.infer_category(item)
-        self.intents.append({
+        self.intents.append({   #merge 1.0
             "type": "spend",
             "amount": amount,
             "item": item,
