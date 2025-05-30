@@ -63,7 +63,7 @@ def init_db():
     ''')
     conn.commit()
     return conn, cursor
-
+ 
 def add_user(cursor, conn, name):
     """Add a user to the database and return their user_id."""
     try:

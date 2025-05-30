@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+        .chat-section {
+            flex: 2;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .bot-message {
+            background-color: #f1f5f9;
+            align-self: flex-start;
+        }
+        .user-message {
+            background-color: #3b82f6;
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+        }
+        .send-button {
+            padding: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .send-button:hover {
+            background: #2563eb;
+        }
+        .sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .sidebar-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .sidebar-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .stat-label {
+            color: #6b7280;
+        }
+        .stat-value {
+            font-weight: 500;
+        }
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .quick-action-btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f1f5f9;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .quick-action-btn:hover {
+            background: #e5e7eb;
+        }
+        .examples-section {
+            margin-top: 20px;
+        }
+        .examples-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .example {
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 4px;
+            margin: 5px 0;
+            cursor: pointer;
+            font-size: 12px;
+            color: #4b5563;
+        }
+        .example:hover {
+            background: #e5e7eb;
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-section">
+            <div class="chat-header">
+                <h1>💰 Finance Chatbot</h1>
+                <p>Your personal financial assistant</p>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Hello! I'm your finance chatbot. I can help you manage your salary, spending categories, track expenses, and provide financial advice. What can I do for you today?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type your message..." autocomplete="off">
+                <button id="sendButton" class="send-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">📊 Financial Overview</div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Salary</span>
+                    <span class="stat-value" id="totalSalary">0 VND</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Unallocated</span>
+                    <span class="stat-value" id="unallocated">0 VND</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Spent</span>
+                    <span class="stat-value" id="totalSpent">0 VND</span>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">🏷️ Categories</div>
+                <div id="categoriesList">
+                    <div style="text-align: center; color: #666; font-size: 12px; padding: 20px;">
+                        No categories yet
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">📈 Spending Chart</div>
+                <div class="chart-container">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">⚡ Quick Actions</div>
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="insertExample('analyze')">Get Financial Advice</button>
+                    <button class="quick-action-btn" onclick="insertExample('graph')">Show Spending Graph</button>
+                    <button class="quick-action-btn" onclick="insertExample('reset')">Reset All Data</button>
+                </div>
+                <div class="examples-section">
+                    <div class="examples-title">💡 Example Commands</div>
+                    <div class="example" onclick="insertExample('i have 5000000 vnd this month')">i have 5000000 vnd this month</div>
+                    <div class="example" onclick="insertExample('i want 2000000 vnd for food, 1000000 vnd for emergency')">i want 2000000 vnd for food, 1000000 vnd for emergency</div>
+                    <div class="example" onclick="insertExample('i spent 50000 vnd for pho in food')">i spent 50000 vnd for pho in food</div>
+                    <div class="example" onclick="insertExample('change the money for food to 2500000 vnd')">change the money for food to 2500000 vnd</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let spendingChart;
+
+        function addMessage(content, isUser = false) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function updateFinancialOverview(data) {
+            document.getElementById('totalSalary').textContent = data.total_salary + ' VND';
+            document.getElementById('unallocated').textContent = data.unallocated + ' VND';
+            document.getElementById('totalSpent').textContent = data.total_spent + ' VND';
+            const categoriesList = document.getElementById('categoriesList');
+            categoriesList.innerHTML = '';
+            if (data.categories.length === 0) {
+                categoriesList.innerHTML = '<div style="text-align: center; color: #666; font-size: 12px; padding: 20px;">No categories yet</div>';
+            } else {
+                data.categories.forEach(cat => {
+                    const div = document.createElement('div');
+                    div.className = 'category-item';
+                    div.innerHTML = `<span>${cat.category}</span><span>${cat.amount} VND</span>`;
+                    categoriesList.appendChild(div);
+                });
+            }
+            const ctx = document.getElementById('spendingChart').getContext('2d');
+            if (spendingChart) spendingChart.destroy();
+            spendingChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.spending.labels,
+                    datasets: [{
+                        data: data.spending.data,
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        async function processInput(input) {
+            addMessage(input, true);
+            try {
+                const response = await fetch('/api/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input })
+                });
+                const data = await response.json();
+                addMessage(data.response);
+                updateFinancialOverview(data.financial_data);
+            } catch (err) {
+                addMessage(`Error: ${err.message}`);
+            }
+        }
+
+        async function loadInitialData() {
+            try {
+                const response = await fetch('/api/financial_data');
+                const data = await response.json();
+                updateFinancialOverview(data);
+            } catch (err) {
+                console.error('Failed to load initial data:', err);
+            }
+        }
+
+        function insertExample(text) {
+            document.getElementById('chatInput').value = text;
+            document.getElementById('chatInput').focus();
+        }
+
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const input = document.getElementById('chatInput').value.trim();
+            if (input) {
+                processInput(input);
+                document.getElementById('chatInput').value = '';
+            }
+        });
+
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = e.target.value.trim();
+                if (input) {
+                    processInput(input);
+                    e.target.value = '';
+                }
+            }
+        });
+
+        // Load initial financial data
+        loadInitialData();
+    </script>
+</body>
+</html>
