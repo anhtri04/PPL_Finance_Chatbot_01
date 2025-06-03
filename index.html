@@ -288,10 +288,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ input })
                 });
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('Non-OK response:', response.status, text);
+                    throw new Error(`Server error: ${response.status} ${text.slice(0, 100)}...`);
+                }
                 const data = await response.json();
                 addMessage(data.response);
                 updateFinancialOverview(data.financial_data);
             } catch (err) {
+                console.error('Fetch error:', err);
                 addMessage(`Error: ${err.message}`);
             }
         }
@@ -299,10 +305,16 @@
         async function loadInitialData() {
             try {
                 const response = await fetch('/api/financial_data');
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('Non-OK response for financial data:', response.status, text);
+                    throw new Error(`Server error: ${response.status}`);
+                }
                 const data = await response.json();
                 updateFinancialOverview(data);
             } catch (err) {
                 console.error('Failed to load initial data:', err);
+                addMessage(`Error loading initial data: ${err.message}`);
             }
         }
 
